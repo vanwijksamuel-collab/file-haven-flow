@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Plus, Search, Grid3X3, List, Settings, User, LogOut } from "lucide-react";
+import { Plus, Search, Grid3X3, List, Settings, User, LogOut, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { VideoEditor } from "@/components/video-editor/VideoEditor";
 import { Input } from "@/components/ui/input";
 import { FileUpload } from "./FileUpload";
 import { FileGrid } from "./FileGrid";
@@ -62,6 +63,7 @@ export const Dashboard = ({ user, onLogout }: DashboardProps) => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [showUpload, setShowUpload] = useState(false);
+  const [showVideoEditor, setShowVideoEditor] = useState(false);
 
   const handleFileUpload = (uploadedFiles: File[]) => {
     const newFiles: FileItem[] = uploadedFiles.map((file) => ({
@@ -127,6 +129,15 @@ export const Dashboard = ({ user, onLogout }: DashboardProps) => {
                   <List className="h-4 w-4" />
                 </Button>
               </div>
+              
+              <Button
+                variant="outline"
+                onClick={() => setShowVideoEditor(true)}
+                className="hidden md:flex"
+              >
+                <Video className="h-4 w-4" />
+                Video Editor
+              </Button>
               
               <Button
                 variant="hero"
@@ -197,11 +208,18 @@ export const Dashboard = ({ user, onLogout }: DashboardProps) => {
           </div>
         )}
         
-        {/* Mobile Upload Button */}
-        <div className="md:hidden mb-6">
+        {/* Mobile Buttons */}
+        <div className="md:hidden mb-6 grid grid-cols-2 gap-3">
+          <Button
+            variant="outline"
+            onClick={() => setShowVideoEditor(true)}
+            className="w-full"
+          >
+            <Video className="h-4 w-4" />
+            Video Editor
+          </Button>
           <Button
             variant="hero"
-            size="lg"
             onClick={() => setShowUpload(true)}
             className="w-full"
           >
@@ -243,6 +261,13 @@ export const Dashboard = ({ user, onLogout }: DashboardProps) => {
           )}
         </div>
       </main>
+
+      {/* Video Editor Modal */}
+      {showVideoEditor && (
+        <div className="fixed inset-0 z-50">
+          <VideoEditor onBack={() => setShowVideoEditor(false)} />
+        </div>
+      )}
     </div>
   );
 };
